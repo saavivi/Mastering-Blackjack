@@ -1,0 +1,5 @@
+
+
+NUM_EPISODE = int(5e5)
+NUM_SHOW = int(1e4)
+NUM_HANDS = NUM_SHOW + 1

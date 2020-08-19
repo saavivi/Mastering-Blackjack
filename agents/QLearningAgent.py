@@ -1,7 +1,7 @@
 from agents.BaseAgent import BaseAgent
 import numpy as np
 from collections import defaultdict
-from lib.constants import NUM_EPISODE, NUM_SHOW
+from lib.constants import TRAINING_DURATION, NUM_SHOW
 from itertools import count
 import sys
 import random
@@ -74,7 +74,8 @@ class QLearningAgent(BaseAgent):
             policy = dict((k, np.argmax(v)) for k, v in Q.items())
             return Q, policy
 
-        q, self.policy = q_learning(self._env, NUM_EPISODE)
+        q, self.policy = q_learning(self._env, TRAINING_DURATION)
+
 
 if __name__ == "__main__":
     b = QLearningAgent()

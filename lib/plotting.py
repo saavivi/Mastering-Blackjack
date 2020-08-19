@@ -9,7 +9,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 EpisodeStats = namedtuple("Stats", ["episode_lengths", "episode_rewards"])
 
 
-def plot_value_function(V, title="Value Function"):
+def plot_value_function(Q, title="Value Function"):
     """
     Plots the value function as a surface plot.
     """

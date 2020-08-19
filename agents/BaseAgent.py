@@ -4,8 +4,8 @@ from collections import defaultdict
 from itertools import count
 import sys
 from lib.plotting import plot_policy
-from lib.constants import NUM_EPISODE, NUM_HANDS, NUM_SHOW
-from lib.plotting import plot_policy
+from lib.constants import TRAINING_DURATION, NUM_HANDS, NUM_SHOW
+from lib.plotting import plot_policy, plot_value_function
 
 
 class BaseAgent:
@@ -14,7 +14,6 @@ class BaseAgent:
         self._env = gym.make('Blackjack-v0')
         self.q = defaultdict(lambda: np.zeros(self._env.action_space.n))
         self.policy = None
-        print("Hi from BaseAgent")
 
     def train(self):
         pass
@@ -32,7 +31,7 @@ class BaseAgent:
                     if reward == 1.0:
                         wins += 1
                     sys.stdout.flush()
-                    if i_episode % NUM_SHOW == 0:
+                    if i_episode % (num_plays - 1) == 0:
                         print(f"\rWins {wins}/{i_episode}.")
                     sys.stdout.flush()
                     # print_observation(observation)
@@ -41,8 +40,12 @@ class BaseAgent:
                     break
 
     def plot_policy(self):
-        if self.policy is not None:
-            plot_policy(self.policy)
+        assert self.policy is not None
+        plot_policy(self.policy)
+
+    def plot_value_function(self):
+        assert self.policy is not None
+        plot_value_function(self.q)
 
 
 

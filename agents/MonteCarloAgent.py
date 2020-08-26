@@ -87,7 +87,7 @@ def mc_control(env, num_episodes=TRAINING_DURATION, alpha=1.0, gamma=1.0, eps_st
     epsilon = eps_start
     for i_episode in range(1, num_episodes+1):
         if i_episode % (num_episodes//10) == 0:
-            print("\rEpisode {}/{}.".format(i_episode, num_episodes), end="")
+            print("\rTraining: Episode {}/{}.".format(i_episode, num_episodes), end="")
             sys.stdout.flush()
         epsilon = max(epsilon*eps_decay, eps_min)
         episode = generate_episode_from_q(env, Q, epsilon, nA)
@@ -106,8 +106,7 @@ class MonteCarloAgent(BaseAgent):
 
 
 if __name__ == "__main__":
-    for i in range(5):
-        mc_agent = MonteCarloAgent()
-        mc_agent.train()
-        mc_agent.plot_policy()
-        mc_agent.play()
+    mc_agent = MonteCarloAgent()
+    mc_agent.train()
+    mc_agent.plot_policy()
+    mc_agent.play()

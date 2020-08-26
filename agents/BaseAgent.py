@@ -19,7 +19,7 @@ class BaseAgent:
         pass
 
     def play(self, num_plays=NUM_HANDS):
-        wins = 0
+        wins, draws, losses = 0, 0, 0
         for i_episode in range(1, num_plays):
             observation = self._env.reset()
             while True:
@@ -30,14 +30,17 @@ class BaseAgent:
                 if done:
                     if reward == 1.0:
                         wins += 1
-                    sys.stdout.flush()
-                    if i_episode % (num_plays - 1) == 0:
-                        print(f"\rWins {wins}/{i_episode}.")
-                    sys.stdout.flush()
-                    # print_observation(observation)
-                    # print("Game end. Reward: {}\n".format(float(reward)))
-
+                    elif reward == 0:
+                        draws += 1
+                    else:
+                        losses += 1
                     break
+        print("")
+        print(f"Wins {wins}/{i_episode}.")
+        print(f"Draws {draws}/{i_episode}.")
+        print(f"Losses {losses}/{i_episode}.")
+        avg_reward = (wins-losses) / num_plays
+        print(f"Average Reward: {avg_reward}")
 
     def plot_policy(self):
         assert self.policy is not None

@@ -9,7 +9,8 @@ class Logger(object):
     """
 
     def __init__(self, log_dir, debug=False):
-        """ Initialize the labels, legend and paths of the plot and log file.
+        """
+        Initialize the labels, legend and paths of the plot and log file.
         Args:
             log_path (str): The path the log files
         """
@@ -22,8 +23,6 @@ class Logger(object):
         if not os.path.exists(log_dir):
             os.makedirs(log_dir)
 
-        # self.txt_file = open(self.txt_path, 'w')
-        # self.csv_file = open(self.csv_path, 'w')
         self.fieldnames = ['timestep', 'reward']
         with open(self.csv_path, 'w+') as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=self.fieldnames)
@@ -32,7 +31,8 @@ class Logger(object):
             txt_file.flush()
 
     def log(self, text):
-        """ Write the text to log file then print it.
+        """
+        Write the text to log file then print it.
         Args:
             text(string): text to log
         """
@@ -43,7 +43,8 @@ class Logger(object):
             print(text)
 
     def log_performance(self, timestep, reward):
-        """ Log a point in the curve
+        """
+        Log a point in the curve
         Args:
             timestep (int): the timestep of the current point
             reward (float): the reward of the current point
@@ -61,17 +62,13 @@ class Logger(object):
     def plot(self, algorithm):
         plot(self.csv_path, self.fig_path, algorithm)
 
-    # def close_files(self):
-    #     """ Close the created file objects
-    #     """
-    #     if self.txt_path is not None:
-    #         self.txt_file.close()
-    #     if self.csv_path is not None:
-    #         self.csv_file.close()
-
 
 def plot(csv_path, save_path, algorithm):
-    """ Read data from csv file and plot the results
+    """
+    Read data from csv file and plot the results to save_path
+    :param csv_path: path to csv file with the data
+    :param save_path: path where to save the figure
+    :param algorithm: name of the algorithm used
     """
     with open(csv_path) as csvfile:
         # print(csv_path)

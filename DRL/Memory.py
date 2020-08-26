@@ -12,7 +12,8 @@ class Memory(object):
     """
 
     def __init__(self, memory_size, batch_size):
-        """ Initialize
+        """
+        Initialize
         Args:
             memory_size (int): the size of the memory buffer
         """
@@ -21,7 +22,8 @@ class Memory(object):
         self.memory = []
 
     def save(self, state, action, reward, next_state, done):
-        """ Save transition into memory
+        """
+        Save transition into memory
         Args:
             state (numpy.array): the current state
             action (int): the performed action ID
@@ -35,7 +37,8 @@ class Memory(object):
         self.memory.append(transition)
 
     def sample(self):
-        """ Sample a minibatch from the replay memory
+        """
+        Sample a minibatch from the replay memory
         Returns:
             state_batch (list): a batch of states
             action_batch (list): a batch of actions

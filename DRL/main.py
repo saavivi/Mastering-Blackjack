@@ -29,7 +29,7 @@ if __name__ == "__main__":
                       train_every=train_every,
                       state_shape=env.state_shape,
                       mlp_layers=[10,10],
-                     debug=True)
+                     debug=False)
     env.set_agents([agent])
     eval_env.set_agents([agent])
 

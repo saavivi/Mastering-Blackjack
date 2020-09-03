@@ -96,7 +96,7 @@ def mc_control(env, to_train, already_trained=0, q=None, alpha=1.0, gamma=1.0,
         #     sys.stdout.flush()
         epsilon = max(epsilon * eps_decay, eps_min)
         episode = generate_episode_from_q(env, q, epsilon, nA)
-        Q = update_q(episode, q, alpha, gamma)
+        q = update_q(episode, q, alpha, gamma)
     policy = dict((k, np.argmax(v)) for k, v in q.items())
     return policy, q
 
@@ -111,14 +111,16 @@ class MonteCarloAgent(BaseAgent):
             self.logger.log_performance(i * EVALUATE_EVERY,
                                         tournament(self._env,
                                                    EVALUATE_NUM_OF_HANDS)[0])
+            # Best Alpha so far is 0.015
             self.eval_policy, self.q = mc_control(self._env,
                                                   q=self.q,
                                                   to_train=EVALUATE_EVERY,
                                                   already_trained=EVALUATE_EVERY*i,
-                                                  alpha=0.3,
+                                                  alpha=0.015,
+                                                  gamma=1.0,
                                                   eps_start=1.0,
                                                   eps_decay=0.99999,
-                                                  eps_min=0.05,
+                                                  eps_min=0.015
                                                   )
         self.policy = self.eval_policy
 

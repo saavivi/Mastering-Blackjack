@@ -38,7 +38,7 @@ class Memory(object):
 
     def sample(self):
         """
-        Sample a minibatch from the replay memory
+        Sample a mini-batch from the replay memory
         Returns:
             state_batch (list): a batch of states
             action_batch (list): a batch of actions

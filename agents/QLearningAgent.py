@@ -11,7 +11,6 @@ class QLearningAgent(BaseAgent):
 
     def __init__(self):
         super().__init__()
-        print("Hey from QlearningAgent")
 
     def train(self):
         def update_Q_sarsamax(alpha, gamma, Q, state, action, reward,
@@ -38,7 +37,7 @@ class QLearningAgent(BaseAgent):
             else:  # otherwise, select an action randomly
                 return np.argmax(Q[state])
 
-        def q_learning(env, num_episodes, alpha=1, gamma=1, epsmin=0):
+        def q_learning(env, num_episodes, alpha=1, gamma=1, epsmin=0.01):
             """Q-Learning - TD Control
 
             Params

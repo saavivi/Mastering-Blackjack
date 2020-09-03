@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def remove_illegal(action_probs, legal_actions):
     """
     Remove illegal actions and normalize the
@@ -26,7 +27,7 @@ def tournament(env, num):
         env (Env class): The environment to be evaluated.
         num (int): The number of games to play.
     Returns:
-        A list of avrage payoffs for each player
+        A list of average payoffs for each player
     """
     payoffs = [0 for _ in range(env.player_num)]
     counter = 0

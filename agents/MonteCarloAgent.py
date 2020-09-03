@@ -1,8 +1,8 @@
 from agents.BaseAgent import BaseAgent
 import numpy as np
 from collections import defaultdict
-from lib.constants import TRAINING_DURATION, NUM_SHOW
-import sys
+from lib.constants import TRAINING_DURATION, EVALUATE_NUM_OF_HANDS,EVALUATE_EVERY
+from lib.utils import tournament
 
 
 def get_epsilon_greedy_probs(Q_s, epsilon, nA)->np.ndarray:
@@ -67,7 +67,8 @@ def update_q(episode, Q, alpha, gamma):
     return Q
 
 
-def mc_control(env, num_episodes=TRAINING_DURATION, alpha=1.0, gamma=1.0, eps_start=1.0, eps_decay=.99999, eps_min=0.05):
+def mc_control(env, to_train, already_trained=0, q=None, alpha=1.0, gamma=1.0,
+               eps_start=1.0, eps_decay=.99999, eps_min=0.05):
     """
     Use the Monte Carlo control algorithm to in order to generate a Q value
     function and the best policy.
@@ -80,33 +81,50 @@ def mc_control(env, num_episodes=TRAINING_DURATION, alpha=1.0, gamma=1.0, eps_st
     :param eps_start: epsilon starting value
     :param eps_decay: epsilon decay factor
     :param eps_min: minimum epsilon
+    :param logger:
     :return: Q(s,a) value function and the optimal policy
     """
     nA = env.action_space.n
-    Q = defaultdict(lambda: np.zeros(nA))
-    epsilon = eps_start
-    for i_episode in range(1, num_episodes+1):
-        if i_episode % (num_episodes//10) == 0:
-            print("\rTraining: Episode {}/{}.".format(i_episode, num_episodes), end="")
-            sys.stdout.flush()
-        epsilon = max(epsilon*eps_decay, eps_min)
-        episode = generate_episode_from_q(env, Q, epsilon, nA)
-        Q = update_q(episode, Q, alpha, gamma)
-    policy = dict((k, np.argmax(v)) for k, v in Q.items())
-    return policy, Q
+    if q is None:
+        q = defaultdict(lambda: np.zeros(nA))
+    epsilon = eps_start*(eps_decay**already_trained)
+    for i_episode in range(1, to_train + 1):
+        # if i_episode % (num_episodes // 10) == 0:
+        #     print("\rTraining: Episode {}/{}.".format(i_episode,
+        #                                               num_episodes),
+        #           end="")
+        #     sys.stdout.flush()
+        epsilon = max(epsilon * eps_decay, eps_min)
+        episode = generate_episode_from_q(env, q, epsilon, nA)
+        Q = update_q(episode, q, alpha, gamma)
+    policy = dict((k, np.argmax(v)) for k, v in q.items())
+    return policy, q
 
 
 class MonteCarloAgent(BaseAgent):
 
     def __init__(self):
-        super().__init__()
+        super().__init__(log_dir='./experiments/mc_result/')
 
     def train(self):
-        self.policy, self.q = mc_control(self._env, num_episodes=TRAINING_DURATION, alpha=0.015)
+        for i in range(0, TRAINING_DURATION // EVALUATE_EVERY + 1):
+            self.logger.log_performance(i * EVALUATE_EVERY,
+                                        tournament(self._env,
+                                                   EVALUATE_NUM_OF_HANDS)[0])
+            self.eval_policy, self.q = mc_control(self._env,
+                                                  q=self.q,
+                                                  to_train=EVALUATE_EVERY,
+                                                  already_trained=EVALUATE_EVERY*i,
+                                                  alpha=0.3,
+                                                  eps_start=1.0,
+                                                  eps_decay=0.99999,
+                                                  eps_min=0.05,
+                                                  )
+        self.policy = self.eval_policy
 
 
 if __name__ == "__main__":
     mc_agent = MonteCarloAgent()
     mc_agent.train()
     mc_agent.plot_policy()
-    mc_agent.play()
+    mc_agent.plot('MC')

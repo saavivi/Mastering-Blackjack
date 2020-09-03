@@ -27,8 +27,8 @@ import torch.nn as nn
 from collections import namedtuple
 from copy import deepcopy
 
-from DRL.Memory import Memory
-from DRL.utils import remove_illegal
+from lib.Memory import Memory
+from lib.utils import remove_illegal
 
 Transition = namedtuple('Transition', ['state', 'action', 'reward', 'next_state', 'done'])
 
@@ -62,7 +62,7 @@ class DQNAgent(object):
         Args:
             scope (str): The name of the DQN agent
             replay_memory_size (int): Size of the replay memory
-            replay_memory_init_size (int): Number of random experiences to sampel when initializing
+            replay_memory_init_size (int): Number of random experiences to sample when initializing
               the reply memory.
             update_target_estimator_every (int): Copy parameters from the Q estimator to the
               target estimator every N steps
@@ -127,12 +127,12 @@ class DQNAgent(object):
         self.feed_memory(state['obs'], action, reward, next_state['obs'], done)
         self.total_t += 1
         tmp = self.total_t - self.replay_memory_init_size
-        if tmp>=0 and tmp%self.train_every == 0:
+        if tmp >= 0 and tmp % self.train_every == 0:
             self.train()
 
     def step(self, state):
         """
-         Predict the action for genrating training data but
+        Predict the action for generating training data but
         have the predictions disconnected from the computation graph
         Args:
             state (numpy.array): current state
@@ -164,7 +164,7 @@ class DQNAgent(object):
         Args:
             state (numpy.array): current state
         Returns:
-            q_values (numpy.array): a 1-d array where each entry represents a Q value
+            A (numpy.array): epsilon-greedy action probabilities
         """
         epsilon = self.epsilons[min(self.total_t, self.epsilon_decay_steps-1)]
         A = np.ones(self.action_num, dtype=float) * epsilon / self.action_num
@@ -195,7 +195,7 @@ class DQNAgent(object):
 
         loss = self.q_estimator.update(state_batch, action_batch, target_batch)
         if self.debug:
-            print('\rINFO - Agent {}, step {}, rl-loss: {}'.format(self.scope, self.total_t, loss), end='')
+            print('\rINFO - Agent {}, step {}, MSE loss of batch: {}'.format(self.scope, self.total_t, loss), end='')
 
         # Update the target estimator
         if self.train_t % self.update_target_estimator_every == 0:
@@ -307,7 +307,7 @@ class Estimator(object):
           a (np.ndarray): (batch,) integer sampled actions
           y (np.ndarray): (batch,) value of optimal actions according to Q-target
         Returns:
-          The calculated loss on the batch.
+          The calculated mse loss on the batch.
         """
         self.optimizer.zero_grad()
 

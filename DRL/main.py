@@ -1,9 +1,8 @@
 import rlcard
 from DRL.DQNAgent import DQNAgent
-from DRL.Logger import Logger
-from DRL.utils import tournament
-from lib.constants import DQN_EVALUATE_EVERY, DQN_TRAINING_DURATION, DQN_EVALUATE_NUM_OF_HANDS
-
+from lib.Logger import Logger
+from lib.utils import tournament
+from lib.constants import EVALUATE_EVERY, DQN_TRAINING_DURATION, EVALUATE_NUM_OF_HANDS
 
 if __name__ == "__main__":
     # Make environment
@@ -24,18 +23,18 @@ if __name__ == "__main__":
 
       # Set up the agents
     agent = DQNAgent('dqn',
-                      action_num=env.action_num,
-                      replay_memory_init_size=memory_init_size,
-                      train_every=train_every,
-                      state_shape=env.state_shape,
-                      mlp_layers=[10,10],
-                     debug=False)
+                     action_num=env.action_num,
+                     replay_memory_init_size=memory_init_size,
+                     train_every=train_every,
+                     state_shape=env.state_shape,
+                     mlp_layers=[128, 256, 512],
+                     debug=True)
     env.set_agents([agent])
     eval_env.set_agents([agent])
 
 
     # Init a Logger to plot the learning curve
-    logger = Logger(log_dir)
+    logger = Logger(log_dir, debug=True)
 
     for episode in range(DQN_TRAINING_DURATION):
 
@@ -47,8 +46,8 @@ if __name__ == "__main__":
             agent.feed(ts)
 
         # Evaluate the performance. Play with random agents.
-        if episode % DQN_EVALUATE_EVERY == 0:
-            logger.log_performance(env.timestep, tournament(eval_env, DQN_EVALUATE_NUM_OF_HANDS)[0])
+        if episode % EVALUATE_EVERY == 0:
+            logger.log_performance(env.timestep, tournament(eval_env, EVALUATE_NUM_OF_HANDS)[0])
 
         # Close files in the logger
         # logger.close_files()

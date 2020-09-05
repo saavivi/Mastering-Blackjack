@@ -1,8 +1,9 @@
 from agents.BaseAgent import BaseAgent
 import numpy as np
 from collections import defaultdict
-from lib.constants import TRAINING_DURATION, EVALUATE_NUM_OF_HANDS,EVALUATE_EVERY
+from lib.constants import *
 from lib.utils import tournament
+
 
 
 def get_epsilon_greedy_probs(Q_s, epsilon, nA)->np.ndarray:
@@ -103,8 +104,9 @@ def mc_control(env, to_train, already_trained=0, q=None, alpha=1.0, gamma=1.0,
 
 class MonteCarloAgent(BaseAgent):
 
-    def __init__(self):
-        super().__init__(log_dir='./experiments/mc_result/')
+    def __init__(self, alpha=0.015, log_dir=MC_RES_DIR):
+        super().__init__(log_dir=log_dir)
+        self.alpha = alpha
 
     def train(self):
         for i in range(0, TRAINING_DURATION // EVALUATE_EVERY + 1):
@@ -116,7 +118,7 @@ class MonteCarloAgent(BaseAgent):
                                                   q=self.q,
                                                   to_train=EVALUATE_EVERY,
                                                   already_trained=EVALUATE_EVERY*i,
-                                                  alpha=0.015,
+                                                  alpha=self.alpha,
                                                   gamma=1.0,
                                                   eps_start=1.0,
                                                   eps_decay=0.99999,
@@ -125,8 +127,20 @@ class MonteCarloAgent(BaseAgent):
         self.policy = self.eval_policy
 
 
+def mc_run_experiments():
+    for i in range(NUM_EXP):
+        mc_agent = MonteCarloAgent(log_dir=f"{MC_RES_DIR}/{i}")
+        mc_agent.train()
+        mc_agent.plot_policy(save=True, save_path=f"{MC_RES_DIR}/{i}/policy.png")
+        mc_agent.plot('MC')
+    BaseAgent.plot_avg(MC_RES_DIR, "MC")
+
+
 if __name__ == "__main__":
-    mc_agent = MonteCarloAgent()
-    mc_agent.train()
-    mc_agent.plot_policy()
-    mc_agent.plot('MC')
+    for i in range(NUM_EXP):
+        mc_agent = MonteCarloAgent(log_dir=f"{MC_RES_DIR}/{i}")
+        mc_agent.train()
+        mc_agent.plot_policy(save=True, save_path=f"{MC_RES_DIR}/{i}/policy.png")
+        mc_agent.plot('MC')
+    MonteCarloAgent.plot_avg(MC_RES_DIR, "MC")
+

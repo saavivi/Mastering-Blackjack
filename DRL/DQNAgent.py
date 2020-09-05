@@ -371,3 +371,7 @@ class EstimatorNetwork(nn.Module):
             s  (Tensor): (batch, state_shape)
         """
         return self.fc_layers(s)
+
+
+# if __name__ == "__main__":
+

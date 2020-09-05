@@ -3,8 +3,9 @@ import numpy as np
 from collections import defaultdict
 from lib.Logger import Logger
 from gym.envs.toy_text.blackjack import BlackjackEnv
-from lib.constants import NUM_HANDS
+from lib.constants import *
 from lib.plotting import plot_policy, plot_value_function
+from lib.plotting import plot_avg
 from lib.utils import tournament
 
 
@@ -41,9 +42,9 @@ class BaseAgent:
     def play(self, num_plays=NUM_HANDS):
         return tournament(self._env, num_plays)
 
-    def plot_policy(self):
+    def plot_policy(self, save=False, save_path=None):
         assert self.policy is not None
-        plot_policy(self.policy)
+        plot_policy(self.policy, save=save, save_path=save_path)
 
     def plot_value_function(self):
         assert self.policy is not None
@@ -51,3 +52,11 @@ class BaseAgent:
 
     def plot(self, algo_name):
         self.logger.plot(algo_name)
+
+    @staticmethod
+    def plot_avg(base_dir, algo_name):
+        csv_path_list = [f"{base_dir}/{j}/performance.csv" for j in
+                         range(NUM_EXP)]
+        label_names = [f"{algo_name}_{j}" for j in range(NUM_EXP)]
+        plot_avg(csv_path_list, label_names, f"{algo_name}_Average",
+                 f"{base_dir}/avg_fig.png")

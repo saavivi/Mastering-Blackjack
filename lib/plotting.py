@@ -4,6 +4,8 @@ import pandas as pd
 from collections import namedtuple
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import os
+import csv
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 EpisodeStats = namedtuple("Stats", ["episode_lengths", "episode_rewards"])
@@ -83,7 +85,7 @@ def plot_episode_stats(stats, smoothing_window=10, noshow=False):
     return fig1, fig2, fig3
 
 
-def plot_policy(policy):
+def plot_policy(policy, save=False, save_path=None):
     def get_Z(x, y, usable_ace):
         if (x, y, usable_ace) in policy:
             return policy[x, y, usable_ace]
@@ -116,4 +118,69 @@ def plot_policy(policy):
     ax = fig.add_subplot(122)
     ax.set_title('No Usable Ace')
     get_figure(False, ax)
+    if not save:
+        plt.show()
+    else:
+        save_dir = os.path.dirname(save_path)
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+
+        fig.savefig(save_path)
+
+
+def plot_avg(csv_path_list, labels_list, title, save_path):
+    """
+    Read data from csv file and plot the results to save_path
+    :param csv_path: path to csv file with the data
+    :param save_path: path where to save the figure
+    :param algorithm: name of the algorithm used
+    """
+    plt.figure()
+    avg_x = None
+    avg_y = None
+    i = 0
+    for csv_path, label in zip(csv_path_list, labels_list):
+        with open(csv_path) as csvfile:
+            i += 1
+            # print(csv_path)
+            reader = csv.DictReader(csvfile)
+            xs = []
+            ys = []
+            for row in reader:
+                xs.append(int(row['timestep']))
+                ys.append(float(row['reward']))
+
+            if avg_x is None:
+                avg_x, avg_y = xs, ys
+            else:
+                avg_x = [ele1 + ele2 for ele1, ele2 in zip(avg_x, xs)]
+                avg_y = [ele1 + ele2 for ele1, ele2 in zip(avg_y, ys)]
+
+            plt.plot(xs, ys, label=label)
+
+    avg_x = [lst_ele/i for lst_ele in avg_x]
+    avg_y = [lst_ele/i for lst_ele in avg_y]
+    plt.plot(avg_x, avg_y, label="Average", color='black', marker='.')
+
+    plt.xlabel("timestep")
+    plt.ylabel("reward")
+    plt.title(title)
+    plt.legend()
+    plt.savefig(save_path)
     plt.show()
+
+    save_dir = os.path.dirname(save_path)
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+    plt.close()
+
+
+
+
+from lib.constants import *
+if __name__ == "__main__":
+    csv_path_list = [f"{MC_RES_DIR}/{i}/performance.csv" for i in range(NUM_EXP)]
+    label_names = [f"MC_{i}" for i in range(5)]
+    print(csv_path_list)
+    print(label_names)
+    plot_avg(csv_path_list, label_names, "aa", './experiments/mc_results/avg_fig.png')

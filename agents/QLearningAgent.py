@@ -1,7 +1,7 @@
 from agents.BaseAgent import BaseAgent
 import numpy as np
 from collections import defaultdict
-from lib.constants import TRAINING_DURATION, EVALUATE_NUM_OF_HANDS,EVALUATE_EVERY
+from lib.constants import *
 from lib.utils import tournament
 from itertools import count
 import sys
@@ -79,7 +79,7 @@ def q_learning(env, to_train, already_trained=0, q=None, alpha=1.0, gamma=1.0,
 
 class QLearningAgent(BaseAgent):
 
-    def __init__(self, alpha=0.015 ,log_dir='./experiments/q_learning_results/'):
+    def __init__(self, alpha=0.015, log_dir='./experiments/q_learning_results/'):
         super().__init__(log_dir=log_dir)
         self.alpha = alpha
 
@@ -102,10 +102,25 @@ class QLearningAgent(BaseAgent):
                                                   )
         self.policy = self.eval_policy
 
+def ql_run_experiments():
+    for i in range(NUM_EXP):
+        q_agent = QLearningAgent(alpha=0.15, log_dir=f"{Q_LEARNING_RES_DIR}/{i}")
+        q_agent.train()
+        q_agent.plot_policy(save=True, save_path=f"{Q_LEARNING_RES_DIR}/{i}/policy.png")
+        q_agent.plot('Q_Learning')
+    BaseAgent.plot_avg(Q_LEARNING_RES_DIR, "QLearning")
 
 if __name__ == "__main__":
-    for i, alpha in enumerate([0.015, 0.0125, 0.0175]):
-        q_agent = QLearningAgent(alpha=alpha, log_dir=f"./experiments/q_learning_results{i}/")
+    for i in range(NUM_EXP):
+        q_agent = QLearningAgent(alpha=0.15, log_dir=f"{Q_LEARNING_RES_DIR}/_{i}")
         q_agent.train()
-        q_agent.plot_policy()
-        q_agent.plot('MC')
+        q_agent.plot_policy(save=True, save_path=f"{Q_LEARNING_RES_DIR}/{i}/policy.png")
+        q_agent.plot('Q_Learning')
+        q_agent
+    from lib.plotting import plot_avg
+    csv_path_list = [f"{Q_LEARNING_RES_DIR}/{j}/performance.csv" for j in
+                     range(NUM_EXP)]
+    label_names = [f"QL_{j}" for j in range(NUM_EXP)]
+    plot_avg(csv_path_list, label_names, "QL_Average", f"{Q_LEARNING_RES_DIR}/avg_fig.png")
+
+

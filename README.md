@@ -1,3 +1,2 @@
-# Mastering-Blackjack\nCombining Reinforcement Learning with Deep Reinforcement Learning
-
+# Mastering-Blackjack: Combining Reinforcement Learning with Deep Reinforcement Learning
 ![](GitHub.gif)

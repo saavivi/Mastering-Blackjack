@@ -4,6 +4,7 @@ from lib.Logger import Logger
 from lib.utils import tournament
 from lib.constants import EVALUATE_EVERY, DQN_TRAINING_DURATION, EVALUATE_NUM_OF_HANDS
 from lib.constants import *
+from agents.BaseAgent import BaseAgent
 
 if __name__ == "__main__":
     for i in range(NUM_EXP):
@@ -13,8 +14,7 @@ if __name__ == "__main__":
 
         # Set the iterations numbers and how frequently we evaluate/save plot
 
-
-        # The intial memory size
+        # The initial memory size
         memory_init_size = 100
 
         # Train the agent every X steps
@@ -23,7 +23,7 @@ if __name__ == "__main__":
         # The paths for saving the logs and learning curves
         log_dir = f"{DQN_RES_DIR}/{i}"
 
-          # Set up the agents
+        # Set up the agents
         agent = DQNAgent('dqn',
                          action_num=env.action_num,
                          replay_memory_init_size=memory_init_size,
@@ -56,4 +56,5 @@ if __name__ == "__main__":
 
         # Plot the learning curve
         logger.plot('DQN')
+    BaseAgent.plot_avg(DQN_RES_DIR, "DQN")
 

@@ -132,7 +132,7 @@ def mc_run_experiments():
         mc_agent = MonteCarloAgent(log_dir=f"{MC_RES_DIR}/{i}")
         mc_agent.train()
         mc_agent.plot_policy(save=True, save_path=f"{MC_RES_DIR}/{i}/policy.png")
-        mc_agent.plot('MC')
+        mc_agent.plot(f"MC_{i}")
     BaseAgent.plot_avg(MC_RES_DIR, "MC")
 
 
@@ -141,6 +141,6 @@ if __name__ == "__main__":
         mc_agent = MonteCarloAgent(log_dir=f"{MC_RES_DIR}/{i}")
         mc_agent.train()
         mc_agent.plot_policy(save=True, save_path=f"{MC_RES_DIR}/{i}/policy.png")
-        mc_agent.plot('MC')
+        mc_agent.plot(f"MC_{i}")
     MonteCarloAgent.plot_avg(MC_RES_DIR, "MC")
 

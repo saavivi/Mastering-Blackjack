@@ -4,7 +4,7 @@ SUITS = ('H', 'D', 'C', 'S')
 TRAINING_DURATION = int(4e3)
 NUM_HANDS = int(4e5)
 
-DQN_TRAINING_DURATION = int(1e5)
+DQN_TRAINING_DURATION = int(4e3)
 EVALUATE_EVERY = TRAINING_DURATION // 100
 EVALUATE_NUM_OF_HANDS = ((len(CARDS) * len(SUITS)) ** 2)
 
@@ -13,7 +13,7 @@ MC_RES_DIR = "./experiments/mc_results"
 RANDOM_RES_DIR = "./experiments/random_results"
 DQN_RES_DIR = "./experiments/dqn_results"
 
-NUM_EXP = 5
+NUM_EXP = 4
 
 
 

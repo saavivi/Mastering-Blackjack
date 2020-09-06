@@ -6,7 +6,7 @@ from lib.constants import EVALUATE_EVERY, DQN_TRAINING_DURATION, EVALUATE_NUM_OF
 from lib.constants import *
 from agents.BaseAgent import BaseAgent
 
-if __name__ == "__main__":
+def dqn_run_experiments():
     for i in range(NUM_EXP):
         # Make environment
         env = rlcard.make('blackjack', config={'seed': i})
@@ -55,6 +55,6 @@ if __name__ == "__main__":
             # logger.close_files()
 
         # Plot the learning curve
-        logger.plot('DQN')
+        logger.plot(f"DQN_{i}")
     BaseAgent.plot_avg(DQN_RES_DIR, "DQN")
 

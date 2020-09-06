@@ -98,16 +98,17 @@ class QLearningAgent(BaseAgent):
                                                   eps_start=1.0,
                                                   eps_decay=0.99999,
                                                   eps_min=0.015,
-                                                  using_alpha=False
+                                                  using_alpha=True
                                                   )
         self.policy = self.eval_policy
+
 
 def ql_run_experiments():
     for i in range(NUM_EXP):
         q_agent = QLearningAgent(alpha=0.15, log_dir=f"{Q_LEARNING_RES_DIR}/{i}")
         q_agent.train()
         q_agent.plot_policy(save=True, save_path=f"{Q_LEARNING_RES_DIR}/{i}/policy.png")
-        q_agent.plot('Q_Learning')
+        q_agent.plot(f"Q_Learning_{i}")
     BaseAgent.plot_avg(Q_LEARNING_RES_DIR, "QLearning")
 
 if __name__ == "__main__":
@@ -115,7 +116,7 @@ if __name__ == "__main__":
         q_agent = QLearningAgent(alpha=0.15, log_dir=f"{Q_LEARNING_RES_DIR}/_{i}")
         q_agent.train()
         q_agent.plot_policy(save=True, save_path=f"{Q_LEARNING_RES_DIR}/{i}/policy.png")
-        q_agent.plot('Q_Learning')
+        q_agent.plot(f"Q_Learning_{i}")
         q_agent
     from lib.plotting import plot_avg
     csv_path_list = [f"{Q_LEARNING_RES_DIR}/{j}/performance.csv" for j in

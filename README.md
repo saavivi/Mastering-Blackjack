@@ -6,6 +6,7 @@
   * [Running The Project](#running-the-project)
   * [Installation Instructions](#installation-instructions)
     + [Libraries to Install](#libraries-to-install)
+  * [References](#references)
 
 ## Running The Project
 |Step      | Description |
@@ -43,6 +44,13 @@ In Windows open `Anaconda Prompt` from the start menu, in Mac/Linux open the ter
 |`seaborn`|  `conda install -c conda-forge seaborn`|
 |`pytorch` (cpu)| `conda install pytorch torchvision cpuonly -c pytorch` |
 |`pytorch` (gpu)| `conda install pytorch torchvision cudatoolkit=10.0 -c pytorch` |
+
+## References
+<a id="1">[1]</a> 
+Mnih, Volodymyr, et al. "Human-level control through deep reinforcement learning." nature 518.7540 (2015): 529-533.
+
+<a id="2">[2]</a> 
+Zha, Daochen, et al. "RLCard: A Toolkit for Reinforcement Learning in Card Games." arXiv preprint arXiv:1910.04376 (2019).
 
 
 

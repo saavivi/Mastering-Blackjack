@@ -136,8 +136,8 @@ def plot_avg(csv_path_list, labels_list, title, save_path):
     :param algorithm: name of the algorithm used
     """
     plt.figure()
-    avg_x = None
-    avg_y = None
+    x = None
+    y = None
     i = 0
     for csv_path, label in zip(csv_path_list, labels_list):
         with open(csv_path) as csvfile:
@@ -150,17 +150,19 @@ def plot_avg(csv_path_list, labels_list, title, save_path):
                 xs.append(int(row['timestep']))
                 ys.append(float(row['reward']))
 
-            if avg_x is None:
-                avg_x, avg_y = xs, ys
+            if x is None and y is None:
+                x, y = xs, ys
             else:
-                avg_x = [ele1 + ele2 for ele1, ele2 in zip(avg_x, xs)]
-                avg_y = [ele1 + ele2 for ele1, ele2 in zip(avg_y, ys)]
+                y = np.vstack((y, ys))
 
-            plt.plot(xs, ys, label=label)
+            # plt.plot(xs, ys, label=label)
 
-    avg_x = [lst_ele/i for lst_ele in avg_x]
-    avg_y = [lst_ele/i for lst_ele in avg_y]
-    plt.plot(avg_x, avg_y, label="Average", color='black', marker='.')
+    y_mean = y.mean(axis=0)
+    y_std = y.std(axis=0)
+
+
+    plt.plot(x, y_mean, label="Mean", color='black', marker='.')
+    plt.fill_between(x, y_mean + y_std, y_mean - y_std, facecolor='g', alpha=0.3)
 
     plt.xlabel("timestep")
     plt.ylabel("reward")

@@ -4,6 +4,8 @@
 
 - [Mastering-Blackjack: Combining Reinforcement Learning with Deep Reinforcement Learning](#Mastering-Blackjack: Combining Reinforcement Learning with Deep Reinforcement Learning)
   * [Running The Project](#running-the-project)
+    + [Running Locally](#running-locally)
+    + [Running Remotely](#running-remotely)
   * [Installation Instructions](#installation-instructions)
     + [Libraries to Install](#libraries-to-install)
   * [References](#references)
@@ -21,6 +23,10 @@
 
 Press "Download ZIP" under the green button `Clone or download` or use `git` to clone the repository using the 
 following command: `git clone https://github.com/saavivi/Mastering-Blackjack.git` (in cmd/PowerShell in Windows or in the Terminal in Linux/Mac)
+
+### Running Remotely
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/saavivi/Mastering-Blackjack.git/master)
+
 
 
 ## Installation Instructions
